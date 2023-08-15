@@ -7,15 +7,17 @@ public class PlayerMoviment : MonoBehaviour
 {
     private Vector2 myInput; // Vector2 que armazena os inputs do joystick de movimento
     [SerializeField] private CharacterController characterController; // Referência ao componente de CharacterController do personagem
+    [SerializeField] private Animator anim;
 
     [SerializeField] private Transform myCamera;
     [SerializeField] private float playerSpeed;
-    [SerializeField] private 
+    [SerializeField] private bool isWalk;
 
     // Start is called before the first frame update
     void Start()
     {
-        characterController = GetComponent<CharacterController>(); 
+        characterController = GetComponent<CharacterController>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
@@ -24,6 +26,18 @@ public class PlayerMoviment : MonoBehaviour
         RotacionarPersonagem(); // Chama o método para definir a rotação do personagem
         characterController.Move(transform.forward * myInput.magnitude * playerSpeed * Time.deltaTime);
         characterController.Move(Vector3.down * 9.81f * Time.deltaTime);
+
+        if(myInput.magnitude >= 0.1)
+        {
+            isWalk = true;
+        }
+        else
+        {
+            isWalk = false;
+        }
+
+        anim.SetBool("isWalk", isWalk);
+
     }
 
     public void MoverPersonagem(InputAction.CallbackContext value)
